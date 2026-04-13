@@ -113,7 +113,8 @@ If the auto-matching doesn't find a file for a product, you can manually fill in
 ### Step 3 — Upload logos to GCP
 
 ```bash
-export GCP_BUCKET_NAME="peko-product-logos"
+# This is the existing GCP bucket where product logos are stored
+export GCP_BUCKET_NAME="zoftware-product-logos"
 export PARTNER_DB_URI="mongodb+srv://..."  # only needed if not already set
 
 npx tsx peko-logos-fix/2-upload-to-gcp.ts
@@ -123,7 +124,7 @@ The script:
 
 1. Reads logo files from `peko-logos-fix/logos/`
 2. Matches them to CSV rows by product name
-3. Uploads each file to `gs://peko-product-logos/product-logos/<filename>`
+3. Uploads each file to `gs://zoftware-product-logos/product-logos/<filename>`
 4. Writes the public URL back into the CSV's `gcp_public_url` column
 
 **Output:** Updated `products-logos.csv` now has `local_filename` and `gcp_public_url` filled in for matched products.
@@ -131,7 +132,7 @@ The script:
 **Verify a URL works:**
 
 ```bash
-curl -I "https://storage.googleapis.com/peko-product-logos/product-logos/adobe.png"
+curl -I "https://storage.googleapis.com/zoftware-product-logos/product-logos/adobe.png"
 # Should return 200 OK
 ```
 
@@ -201,7 +202,8 @@ If something goes wrong, the original S3 URLs are preserved in the `s3_logo_url`
 ```bash
 # Full flow (after setup)
 export PARTNER_DB_URI="mongodb+srv://..."
-export GCP_BUCKET_NAME="peko-product-logos"
+# Use the exact existing bucket name — do NOT create a new one
+export GCP_BUCKET_NAME="zoftware-product-logos"
 
 npx tsx peko-logos-fix/1-export-products.ts        # Export CSV
 # ... place logo files in peko-logos-fix/logos/ ...
