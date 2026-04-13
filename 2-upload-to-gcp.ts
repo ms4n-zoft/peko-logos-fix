@@ -28,7 +28,7 @@ interface CsvRow {
 async function upload() {
   if (!existsSync(LOGOS_DIR)) {
     console.error(`[Upload] Logos directory not found: ${LOGOS_DIR}`);
-    console.error("[Upload] Place your logo files in pico-logos-fix/logos/");
+    console.error("[Upload] Place your logo files in peko-logos-fix/logos/");
     process.exit(1);
   }
 

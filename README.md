@@ -76,10 +76,10 @@ This queries MongoDB for all products where `logo_url` contains `s3.amazonaws.co
 export PARTNER_DB_URI="mongodb+srv://user:pass@cluster.mongodb.net/PekoPartnerDB"
 
 # Run the export
-npx tsx pico-logos-fix/1-export-products.ts
+npx tsx peko-logos-fix/1-export-products.ts
 ```
 
-**Output:** `pico-logos-fix/products-logos.csv` with columns:
+**Output:** `peko-logos-fix/products-logos.csv` with columns:
 
 | \_id   | product_name | s3_logo_url            | local_filename | gcp_public_url |
 | ------ | ------------ | ---------------------- | -------------- | -------------- |
@@ -92,7 +92,7 @@ Review the CSV and verify the product list makes sense.
 Copy your logo files from the shared drive into:
 
 ```
-pico-logos-fix/
+peko-logos-fix/
   logos/
     adobe.png
     salesforce.svg
@@ -113,17 +113,17 @@ If the auto-matching doesn't find a file for a product, you can manually fill in
 ### Step 3 — Upload logos to GCP
 
 ```bash
-export GCP_BUCKET_NAME="pico-product-logos"
+export GCP_BUCKET_NAME="peko-product-logos"
 export PARTNER_DB_URI="mongodb+srv://..."  # only needed if not already set
 
-npx tsx pico-logos-fix/2-upload-to-gcp.ts
+npx tsx peko-logos-fix/2-upload-to-gcp.ts
 ```
 
 The script:
 
-1. Reads logo files from `pico-logos-fix/logos/`
+1. Reads logo files from `peko-logos-fix/logos/`
 2. Matches them to CSV rows by product name
-3. Uploads each file to `gs://pico-product-logos/product-logos/<filename>`
+3. Uploads each file to `gs://peko-product-logos/product-logos/<filename>`
 4. Writes the public URL back into the CSV's `gcp_public_url` column
 
 **Output:** Updated `products-logos.csv` now has `local_filename` and `gcp_public_url` filled in for matched products.
@@ -131,7 +131,7 @@ The script:
 **Verify a URL works:**
 
 ```bash
-curl -I "https://storage.googleapis.com/pico-product-logos/product-logos/adobe.png"
+curl -I "https://storage.googleapis.com/peko-product-logos/product-logos/adobe.png"
 # Should return 200 OK
 ```
 
@@ -149,10 +149,10 @@ Before updating the database, open `products-logos.csv` and verify:
 
 ```bash
 # Dry run first — prints what would change without touching the DB
-npx tsx pico-logos-fix/3-update-products.ts --dry-run
+npx tsx peko-logos-fix/3-update-products.ts --dry-run
 
 # Review the dry-run output carefully. If it looks good, run for real:
-npx tsx pico-logos-fix/3-update-products.ts
+npx tsx peko-logos-fix/3-update-products.ts
 ```
 
 The script updates `logo_url` for each product where the CSV has a `gcp_public_url`.
@@ -171,7 +171,7 @@ After running the upload script, some CSV rows may still have empty `local_filen
 ## Folder Structure
 
 ```
-pico-logos-fix/
+peko-logos-fix/
   PLAN.md                    # This document
   1-export-products.ts       # Step 1: Export CSV
   2-upload-to-gcp.ts         # Step 3: Upload + update CSV
@@ -201,11 +201,11 @@ If something goes wrong, the original S3 URLs are preserved in the `s3_logo_url`
 ```bash
 # Full flow (after setup)
 export PARTNER_DB_URI="mongodb+srv://..."
-export GCP_BUCKET_NAME="pico-product-logos"
+export GCP_BUCKET_NAME="peko-product-logos"
 
-npx tsx pico-logos-fix/1-export-products.ts        # Export CSV
-# ... place logo files in pico-logos-fix/logos/ ...
-npx tsx pico-logos-fix/2-upload-to-gcp.ts          # Upload to GCP
-npx tsx pico-logos-fix/3-update-products.ts --dry-run  # Verify
-npx tsx pico-logos-fix/3-update-products.ts            # Apply
+npx tsx peko-logos-fix/1-export-products.ts        # Export CSV
+# ... place logo files in peko-logos-fix/logos/ ...
+npx tsx peko-logos-fix/2-upload-to-gcp.ts          # Upload to GCP
+npx tsx peko-logos-fix/3-update-products.ts --dry-run  # Verify
+npx tsx peko-logos-fix/3-update-products.ts            # Apply
 ```
